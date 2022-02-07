@@ -2,11 +2,9 @@
 """
 Created on Sat Jun 20 09:44:29 2020
 
-@author: Skulpt-PC
+@author: Martin Buck
 
-Martin Buck, Math 123 project
-
-Implement spectral clustering
+Implement Spectral Clustering
 """
 
 import numpy as np
@@ -18,17 +16,14 @@ import random
 import time
 import os
 
-# load simple toy data sets to implement spectral clustering on. This includes
-# two gaussian blobs, two ellipse blobs, the "moon" data set, and two
-# concentric circles
+# load simple toy data sets to implement spectral clustering on
 spiral_mat = loadmat('datasets/spirals.mat')
 spiral_data = spiral_mat['X']
 
 # epsilon determines when k-means should stop iterating
-epsilon = 10**-18
+epsilon = 10**-16
 # need to tune parameter sigma
 s_arr = [.001, .01, .1, .2, .3, .4, .5, .6, .7, .8, .9, 1, 10, 100]
-# s_arr = [.001]
 # clusters
 k = 2
 # number of eigenvectors to explore embedding
@@ -36,7 +31,6 @@ e_start = 0
 e_end = 3
 
 start_time = time.time()
-
 
 def main():
     """Run the spectral clustering alg. on the above data sets."""
@@ -52,7 +46,7 @@ def main():
         error_count += 1
 
     # plot error as a function of number of eigenvectors included, and error
-    # as a function of sigma. Create surface plot
+    # as a function of sigma
     plt.plot(eigen_errors)
 
 
@@ -81,11 +75,8 @@ def spect(X, dataset_str, folder, s):
     w = w[ind]
     v = v[:, ind]
 
-    # run k-means on embedded data
-    # first iteration looks at just the 2nd eigenvector which may or may not
-    # be the fiedler vector
-    # probably need to identify the first non-constant eigenvector
-    phi_X = v[:, 2:4]
+    # run k-means on embedded data using the 2nd and 3rd eigenvector
+    phi_X = v[:, 1:2]
     eigen_error = k_means(phi_X, X, 2, folder, s)
 
     return eigen_error
@@ -134,7 +125,7 @@ def k_means(X, X_o, e, folder, s):
     plt.title('Errors vs. Sigma')
     plt.xlabel('Sigma')
     plt.ylabel('Square Euclidean Error')
-    plt.xticks(range(14), ['.001', '.01', '.1', '.2', '.3', '.4', '.5', '.6'
+    plt.xticks(range(14), ['.001', '.01', '.1', '.2', '.3', '.4', '.5', '.6',
                            '.7', '.8', '.9', '1', '10', '100'])
 
     return errors[-1]
